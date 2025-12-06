@@ -19,7 +19,7 @@
 
 > Программа получает на вход 5 чисел X, A, B, C, D, не превыщающих по модулю 2<sup>31</sup>. Нужно определить, 
 > через какое количество отверстий сможет пройти шарик заданного диаметра X.
-> Будем считать, что шарик прошел через отверстие, если диаметр шарика X <= диаметру отверстия.
+> Будем считать, что шарик прошел через отверстие, если диаметр шарика X меньше или равен диаметру отверстия.
 > Если шарик не пройдет какое-то отверстие, то работа будет останавливаться, и будет проверяться следующее значение диаметра шара.
 
 ### 2. Входные и выходные данные
@@ -69,46 +69,34 @@
 
 2. **Сравнение чисел:**  
    Программа сравнивает значения `x` с значениями `a`, `b`, `c`, `d`. Если `x` меньше или равен `a`, `b`, `c`, `d`, программа увеличит счетчик count на единицу. Если 
-`x` больше `a`, `b`, `c`, `d`, то праграмма будет переходить к проверке следующего значения, пока проверит не все.
+`x` больше `a`, `b`, `c`, `d`, то работа праграммы будет останавливаться, и будет выводиться то значение count, через сколько шар в итоге смог пройти отверстий, затем программа будет ждать проверки следующего значения.
 3. **Вывод результата:**  
 
  #### Блок-схема
 
  ```mermaid
- flowchart TD
-    Start([Начало]) --> Input[/Ввод X, A, B, C, D/]
-    Input --> Init[count = 0]
+flowchart TD
+    A([Начало]) --> B[/Ввод X, A, B, C, D/]
+    B --> C[count = 0]
 
-    Init --> CheckA{X ≤ A?}
-    CheckA -- Да --> IncA[count = count + 1]
-    CheckA -- Нет --> ResetA[count = 0]
+    C --> D{X ≤ A?}
+    D -- Нет --> K[/Вывод count/]
+    D -- Да --> E[count = count + 1]
 
-    IncA --> CheckB
-    ResetA --> CheckA
+    E --> F{X ≤ B?}
+    F -- Нет --> K
+    F -- Да --> G[count = count + 1]
 
-    CheckB{X ≤ B?} -- Да --> IncB[count = count + 1]
-    CheckB -- Нет --> ResetB[count = 1]
+    G --> H{X ≤ C?}
+    H -- Нет --> K
+    H -- Да --> I[count = count + 1]
 
-    IncB --> CheckC
-    ResetB --> CheckA
+    I --> J{X ≤ D?}
+    J -- Нет --> K
+    J -- Да --> L[count = count + 1]
+    L --> K
 
-    CheckC{X ≤ C?} -- Да --> IncC[count = count + 1]
-    CheckC -- Нет --> ResetC[count = 2]
-
-    IncC --> CheckD
-    ResetC --> CheckA
-
-    CheckD{X ≤ D?} -- Да --> IncD[count = count + 1]
-    CheckD -- Нет --> ResetD[count = 3]
-
-    IncD --> Success{count == 4?}
-    ResetD --> CheckA
-
-    Success -- Да --> Output[/Вывод: 'Прошёл все 4'/]
-    Success -- Нет --> CheckA
-
-    Output --> End([Конец])
-
+    K --> M([Конец])
 ```
 
 ### 5. Программа
@@ -120,7 +108,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Ввод данных
         System.out.print("Введите диаметр шарика (X): ");
         int X = scanner.nextInt();
         System.out.print("Введите диаметр первого отверстия (A): ");
@@ -132,26 +119,26 @@ public class Main {
         System.out.print("Введите диаметр четвертого отверстия (D): ");
         int D = scanner.nextInt();
 
-        // Инициализация счетчика
         int count = 0;
 
-        // Проверка каждого отверстия
         if (X <= A) {
             count++;
+            if (X <= B) {
+                count++;
+                if (X <= C) {
+                    count++;
+                    if (X <= D) {
+                        count++;
+                    }
+                }
+            }
         }
-        if (X <= B) {
-            count++;
+        if (count == 0 || count == 1 || count == 5) {
+            System.out.println("Шарик удастся протащить " + count + " раз");
         }
-        if (X <= C) {
-            count++;
+        if (count == 2 || count == 3 || count == 4) {
+            System.out.println("Шарик удастся протащить " + count + " раза");
         }
-        if (X <= D) {
-            count++;
-        }
-
-        // Вывод результата
-        System.out.println("Шарик удастся протащить через " + count + " отверстий.");
-        
         scanner.close();
     }
 }
