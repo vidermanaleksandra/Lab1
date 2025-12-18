@@ -86,20 +86,20 @@
 |                       | Тип                     | min значение    | max значение   |
 |-----------------------|-------------------------|-----------------|----------------|
 |     n    (Число)      |       Целое число       |        1        | 2<sup>31</sup> |
-| n положительных чисел |       Целые числа       |        1        | 2<sup>31</sup> |
+| n положительных чисел |       Целые числа       | -2<sup>31</sup> | 2<sup>31</sup> |
 
 #### Данные на выход
 Программа выводит массив из n целых чисел, обозначающий количество делителей для каждого исходного элемента, в том же порядке.
 
 |                       | Тип                     | min длина       | max длина                                   |
 |-----------------------|-------------------------|-----------------|---------------------------------------------|
-|  массив целых чисел   |          массив         |        1        |равное количеству натуральных делителей числа|
+|  массив целых чисел   |          массив         |        1        |     равная количеству введенных чисел       |
 
 
 ### 3. Выбор структуры данных
 
 ### задача № 1
-Программа получает 2 целых чисел, не превышающих по модулю 2<sup>31</sup>. Поэтому для их хранения
+Программа получает 2 целых числа, не превышающих по модулю 2<sup>31</sup>. Поэтому для их хранения
 можно выделить 2 переменныe (`a0`, `n`) типа `int`.
 
 |              | название переменной | Тип (в Java) | 
@@ -117,72 +117,207 @@
 | start        | `start`             | `char`       | 
 
 ### задача № 3
-Программа принимает последовательность целых чисел, для хранения выделим переменную (`A`) типа `int`. Результат будем хранить в переменной (`N`) типа `int`.
+Программа принимает последовательность целых чисел, каждое из которых типа `int`. Результат будем хранить в переменной (`N`) типа `int`.
 
 |              | название переменной | Тип (в Java) | 
 |--------------|---------------------|--------------|
-| A  (Число 1) | `A`                 | `int`        |
-| N  (Число 2) | `N`                 | `int`        |
+| N  (Число)   | `N`                 | `int`        |
 
 ### задача № 4
-Программа получает целое число, для хранения выделим пременную (`N`) типа `int`. Затем 
+Программа получает целое число, для хранения выделим пременную (`n`) типа `int`. Затем программа выводит массив целых чисел, каждое из которых типа `int`.
+
+|              | название переменной | Тип (в Java) | 
+|--------------|---------------------|--------------|
+| n (Число)    | `n`                 | `int`        | 
 
 
-
-### 5. Программа
+### 4. Программы
 ### задача № 1
 ```java
+import java.io.PrintStream;
+import java.util.Scanner;
+public class Main {
+    public static Scanner in = new Scanner(System.in);
+    public static PrintStream out = System.out;
+    public static void main(String[] args)  {
+        int a0 = in.nextInt();
+        int n = in.nextInt();
 
+        int current = a0;
+        for (int i = 0; i < n; i++) {
+            int step = i % 3;
+            if (step == 0 || step == 1) {
+                current = current * 2;
+            } else { //
+                current = current + 1;
+            }
+            System.out.print(current);
+            if (i < n - 1) {
+                System.out.print(" ");
+            }
+        }
+        System.out.println();
+    }
+}
 ```
 
 ### задача № 2
 ```java
+import java.io.PrintStream;
+import java.io.IOException;
+import java.util.Scanner;
+public class Main {
+    public static Scanner in = new Scanner(System.in);
+    public static PrintStream out = System.out;
+    public static void main(String[] args) throws IOException {
+        char start = in.next().charAt(0);
+        int N = in.nextInt();
+
+        char current = start;
+
+        for (int step = 1; step <= N; step++) {
+            if ((int)current + step - 1 > (int)'Z') {
+                break;
+            }
+
+            if (step % 2 == 1) {
+                for (int i = 0; i < step; i++) {
+                    System.out.print((char)(current + i));
+                }
+            }
+            else {
+                for (int i = step - 1; i >= 0; i--) {
+                    System.out.print((char)(current + i));
+                }
+            }
+            System.out.println();
+            current = (char)(current + step);
+        }
+    }
+}
 
 ```
 
 ### задача № 3
 ```java
+import java.io.PrintStream;
+import java.util.Scanner;
+public class Main {
+    public static Scanner in = new Scanner(System.in);
+    public static PrintStream out = System.out;
+    public static void main(String[] args)  {
 
+        if (! in.hasNextInt()) {
+            System.out.println(0);
+            return;
+        }
+        int first = in.nextInt();
+
+        if (! in.hasNextInt()) {
+            System.out.println(1);
+            return;
+        }
+        int second = in.nextInt();
+
+        int N = 2;
+        int diff = second - first;
+
+        while (in.hasNextInt()) {
+            int next = in.nextInt();
+            if (next == second + diff) {
+                N++;
+                second = next;
+            } else {
+                break;
+            }
+        }
+        System.out.println(N);
+    }
+}
 ```
 
 ### задача № 4
 ```java
+import java.io.PrintStream;
+import java.util.Scanner;
+public class Main {
+    public static Scanner in = new Scanner(System.in);
+    public static PrintStream out = System.out;
+    public static void main(String[] args)  {
 
+        int n = in.nextInt();
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = in.nextInt();
+        }
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = countDivisors(arr[i]);
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (i > 0) System.out.print(" ");
+            System.out.print(arr[i]);
+        }
+        System.out.println();
+    }
+
+    public static int countDivisors(int x) {
+        int count = 0;
+        for (int i = 1; i * i <= x; i++) {
+            if (x % i == 0) {
+                if (i * i == x) {
+                    count++;
+                } else {
+                    count += 2;
+                }
+            }
+        }
+        return count;
+    }
+}
 ```
 
-### 6. Анализ правильности решения
-
-Программа работает корректно на всем множестве решений с учетом ограничений.
+### 5. Анализ правильности решений
 
 1. Тест 1:
 
     - **Input**:
         ```
-        5 2 6 7 8 
+        1
+        4
         ```
 
     - **Output**:
         ```
-        0
+        2 4 5 10
         ```
 
 2. Тест 2:
 
     - **Input**:
         ```
-        5 6 3 4 2 
+        D
+        5
         ```
 
     - **Output**:
         ```
-        1
+        D
+        FE
+        GHI
+        MLKJ
+        NOPQR
         ```
 
 3. Тест 3:
 
     - **Input**:
         ```
-         5 6 7 3 9 
+        4
+        5
+        3
         ```
 
     - **Output**:
@@ -194,22 +329,14 @@
 
     - **Input**:
         ```
-        5 6 7 8 3 
-        ```
-
-    - **Output**:
-        ```
         3
-        ```
-
-5. Тест 5:
-
-    - **Input**:
-        ```
-        5 6 7 8 9
+       -1
+       -3
+        5
         ```
 
     - **Output**:
         ```
-        4
+        0 0 2
+
         ```
