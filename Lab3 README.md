@@ -11,7 +11,6 @@
 - [Постановка задачи](#1-постановка-задачи)
 - [Алгоритм](#2-алгоритм)
 - [Программа](#3-программа)
-- [Анализ правильности решения](#4-анализ-правильности-решения)
 
 ### 1. Постановка задачи
 Разработать функционал для управления списком дел с возможностью добавления, удаления и изменения статуса задач. Предусмотреть вывод полного списка, выполненных
@@ -257,4 +256,253 @@ exit - завершить программу
 Вывод "До свидания!".
 
 ### 3. Программа
+
+```java
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class TodoList {
+    private static class Task {
+        String name;
+        boolean completed;
+
+        Task(String name) {
+            this.name = name;
+            this.completed = false;
+        }
+    }
+
+    private List<Task> tasks = new ArrayList<>();
+    private String name = "Мой список дел";
+
+    // Конструкторы
+    public TodoList() {}
+
+    public TodoList(String name) {
+        this.name = name;
+    }
+
+    // Добавление нового дела (проверка на дубликат)
+    public void addTask(String taskName) {
+        for (Task t : tasks) {
+            if (t.name.equals(taskName)) {
+                System.out.println("Дело \"" + taskName + "\" уже существует.");
+                return;
+            }
+        }
+        tasks.add(new Task(taskName));
+        System.out.println("Дело \"" + taskName + "\" добавлено.");
+    }
+
+    // Вывод всего списка
+    public void printAllTasks() {
+        System.out.println(name + ":");
+        if (tasks.isEmpty()) {
+            System.out.println("  Список пуст.");
+            return;
+        }
+        char letter = 'a';
+        for (Task t : tasks) {
+            String status;
+            if (t.completed) {
+                status = "x";
+            } else {
+                status = " ";
+            }
+            System.out.println("  (" + letter + ") [" + status + "] \"" + t.name + "\"");
+            letter++;
+        }
+    }
+
+    // Вывод только невыполненных дел
+    public void printPendingTasks() {
+        System.out.println("Невыполненные дела:");
+        boolean found = false;
+        char letter = 'a';
+        for (Task t : tasks) {
+            if (!t.completed) {
+                System.out.println("  (" + letter + ") [ ] \"" + t.name + "\"");
+                found = true;
+            }
+            letter++;
+        }
+        if (!found) {
+            System.out.println("  Нет невыполненных дел.");
+        }
+    }
+
+    // Вывод только выполненных дел
+    public void printCompletedTasks() {
+        System.out.println("Выполненные дела:");
+        boolean found = false;
+        char letter = 'a';
+        for (Task t : tasks) {
+            if (t.completed) {
+                System.out.println("  (" + letter + ") [x] \"" + t.name + "\"");
+                found = true;
+            }
+            letter++;
+        }
+        if (!found) {
+            System.out.println("  Нет выполненных дел.");
+        }
+    }
+
+    // Изменение статуса по номеру
+    public void toggleTaskByNumber(int number) {
+        if (number < 1 || number > tasks.size()) {
+            System.out.println("Неверный номер: " + number);
+            return;
+        }
+        Task t = tasks.get(number - 1);
+        t.completed = !t.completed;
+        String status;
+        if (t.completed) {
+            status = "выполнено";
+        } else {
+            status = "снято с выполнения";
+        }
+        System.out.println("Дело \"" + t.name + "\" " + status + ".");
+    }
+
+    // Изменение статуса по названию
+    public void toggleTaskByName(String taskName) {
+        for (Task t : tasks) {
+            if (t.name.equals(taskName)) {
+                t.completed = !t.completed;
+                String status;
+                if (t.completed) {
+                    status = "выполнено";
+                } else {
+                    status = "снято с выполнения";
+                }
+                System.out.println("Дело \"" + t.name + "\" " + status + ".");
+                return;
+            }
+        }
+        System.out.println("Дело \"" + taskName + "\" не найдено.");
+    }
+
+    // Получение номера по названию
+    public int getTaskNumberByName(String taskName) {
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).name.equals(taskName)) {
+                return i + 1;
+            }
+        }
+        return -1;
+    }
+
+    // Удаление по номеру
+    public void removeTaskByNumber(int number) {
+        if (number < 1 || number > tasks.size()) {
+            System.out.println("Неверный номер: " + number);
+            return;
+        }
+        String name = tasks.get(number - 1).name;
+        tasks.remove(number - 1);
+        System.out.println("Дело \"" + name + "\" удалено.");
+    }
+
+    // Удаление по названию
+    public void removeTaskByName(String taskName) {
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).name.equals(taskName)) {
+                tasks.remove(i);
+                System.out.println("Дело \"" + taskName + "\" удалено.");
+                return;
+            }
+        }
+        System.out.println("Дело \"" + taskName + "\" не найдено.");
+    }
+
+    // Получение количества дел
+    public int getTotalTasks() {
+        return tasks.size();
+    }
+
+    public int getCompletedCount() {
+        int count = 0;
+        for (Task t : tasks) {
+            if (t.completed) count++;
+        }
+        return count;
+    }
+
+    public int getPendingCount() {
+        return getTotalTasks() - getCompletedCount();
+    }
+
+    // Процент выполнения
+    public double getCompletionPercentage() {
+        if (getTotalTasks() == 0) return 0.0;
+        return (double) getCompletedCount() / getTotalTasks() * 100;
+    }
+
+    // Вывод статистики
+    public void printStatistics() {
+        int total = getTotalTasks();
+        int done = getCompletedCount();
+        int pending = getPendingCount();
+        double percent = getCompletionPercentage();
+
+        System.out.println("Статистика:");
+        System.out.println("  Всего дел: " + total);
+        System.out.println("  Выполнено: " + done);
+        System.out.println("  Не выполнено: " + pending);
+        System.out.printf("  Процент выполнения: %.1f%%\n", percent);
+    }
+
+    // Простой пример использования через консоль (опционально)
+    public static void main(String[] args) {
+        TodoList list = new TodoList("Дела на неделю");
+        Scanner scanner = new Scanner(System.in);
+        String command;
+
+        while (true) {
+            System.out.println("\nКоманды: add, list, pending, done, toggle, remove, stats, exit");
+            System.out.print("Введите команду: ");
+            command = scanner.nextLine().trim();
+
+            if (command.equals("exit")) {
+                break;
+            } else if (command.equals("list")) {
+                list.printAllTasks();
+            } else if (command.equals("pending")) {
+                list.printPendingTasks();
+            } else if (command.equals("done")) {
+                list.printCompletedTasks();
+            } else if (command.startsWith("add ")) {
+                String task = command.substring(4).trim();
+                if (!task.isEmpty()) list.addTask(task);
+            } else if (command.startsWith("toggle ")) {
+                String arg = command.substring(7).trim();
+                try {
+                    int num = Integer.parseInt(arg);
+                    list.toggleTaskByNumber(num);
+                } catch (NumberFormatException e) {
+                    list.toggleTaskByName(arg);
+                }
+            } else if (command.startsWith("remove ")) {
+                String arg = command.substring(7).trim();
+                try {
+                    int num = Integer.parseInt(arg);
+                    list.removeTaskByNumber(num);
+                } catch (NumberFormatException e) {
+                    list.removeTaskByName(arg);
+                }
+            } else if (command.equals("stats")) {
+                list.printStatistics();
+            } else {
+                System.out.println("Неизвестная команда.");
+            }
+        }
+        scanner.close();
+        System.out.println("До свидания!");
+    }
+}
+
+```
 
