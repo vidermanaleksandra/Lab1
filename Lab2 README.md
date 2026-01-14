@@ -50,7 +50,7 @@
 
 ### задача № 2
 #### Данные на вход
-Программа примает два значения: буквы латинского алфавита для построения лесенки и целые числа, обозначающие количество ступенек. 
+Программа принимает два значения: буквы латинского алфавита для построения лесенки и целые числа, обозначающие количество ступенек. 
 
 |               | Тип                     | min значение    | max значение   |
 |---------------|-------------------------|-----------------|----------------|
@@ -86,7 +86,7 @@
 |                       | Тип                     | min значение    | max значение   |
 |-----------------------|-------------------------|-----------------|----------------|
 |     n    (Число)      |       Целое число       |        1        | 2<sup>31</sup> |
-| n положительных чисел |       Целые числа       | -2<sup>31</sup> | 2<sup>31</sup> |
+| n положительных чисел |       Целые числа       |        1        | 2<sup>31</sup> |
 
 #### Данные на выход
 Программа выводит массив из n целых чисел, обозначающий количество делителей для каждого исходного элемента, в том же порядке.
@@ -241,40 +241,29 @@ public class Main {
 import java.io.PrintStream;
 import java.util.Scanner;
 public class Main {
-    public static Scanner in = new Scanner(System.in);
-    public static PrintStream out = System.out;
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
+        Scanner  in = new Scanner(System.in);
 
         int n = in.nextInt();
-        int[] arr = new int[n];
 
+        int[] a = new int[n];
         for (int i = 0; i < n; i++) {
-            arr[i] = in.nextInt();
+            a[i] = in.nextInt();
         }
 
         for (int i = 0; i < n; i++) {
-            arr[i] = countDivisors(arr[i]);
-        }
-
-        for (int i = 0; i < n; i++) {
-            if (i > 0) System.out.print(" ");
-            System.out.print(arr[i]);
-        }
-        System.out.println();
-    }
-
-    public static int countDivisors(int x) {
-        int count = 0;
-        for (int i = 1; i * i <= x; i++) {
-            if (x % i == 0) {
-                if (i * i == x) {
+            int count = 0;
+            int number = a[i];
+            for (int j = 1; j <= number; j++) {
+                if (number % j == 0) {
                     count++;
-                } else {
-                    count += 2;
                 }
             }
+            a[i] = count;
         }
-        return count;
+        for (int i = 0; i < n; i++) {
+            System.out.print(a[i] + " ");
+        }
     }
 }
 ```
@@ -330,13 +319,13 @@ public class Main {
     - **Input**:
         ```
         3
-       -1
-       -3
+        1
+        3
         5
         ```
 
     - **Output**:
         ```
-        0 0 2
+        1 2 2 
 
         ```
