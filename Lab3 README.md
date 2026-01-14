@@ -57,450 +57,383 @@
 
 ### 2. Алгоритм
 
-1) Инициализация списка дел
-
-Создаем пустой список задач с возможностью задать пользовательское имя.
-
-Создаём объект класса TodoList:
-
-Без параметров → используем имя по умолчанию: "Мой список дел".
-
-С параметром name → имя устанавливается как заданное.
-
-Внутри объекта:
-
-Инициализируется пустой список tasks типа ArrayList<Task>.
-
-Создаётся внутренний класс Task, содержащий:
-
-name — название дела (строка),
-
-completed — флаг завершённости (false по умолчанию).
-
-2) Добавление нового дела (addTask)
-
-Добавляем дело, если оно ещё не существует.
-
-Получаем название дела taskName.
-
-Проверяем все существующие дела:
-
-Если найдено дело с таким же названием → выводим сообщение об ошибке и завершаем.
-
-Если дело новое:
-
-Создаем объект new Task(taskName).
-
-Добавляем его в tasks.
-
-Выводим подтверждение.
-
-3) Вывод всех дел (printAllTasks)
-
-Показываем весь список с индексацией буквами (a, b, c, …) и статусами.
-
-Выводим заголовок (имя списка).
-
-Если список пуст → сообщаем об этом.
-
-Иначе:
-
-Начинаем с буквы 'a'.
-
-Для каждого дела:
-
-Если completed == true → статус "x", иначе " ".
-
-Выводим: (буква) [статус] "название".
-
-4) Вывод только невыполненных дел (printPendingTasks)
-
-Показываем только незавершённые дела.
-
-Выводим заголовок "Невыполненные дела:".
-
-Проходим по всем делам, считая буквы.
-
-Выводим только те, где completed == false.
-
-Если таких нет → сообщаем.
-
-5) Вывод только выполненных дел (printCompletedTasks)
-
-Показываем только завершённые дела.
-
-Аналогично printPendingTasks, но фильтр: completed == true.
-
-6) Переключение статуса дела
-
-а) По номеру (toggleTaskByNumber):
-
-Проверяем, что номер number в диапазоне [1, размер списка].
-
-Если нет → ошибка.
-
-Иначе:
-
-Берем дело по индексу number - 1.
-
-Меняем completed.
-
-Выводим сообщение: "Дело ... выполнено." или "снято с выполнения.".
-
-б) По названию (toggleTaskByName):
-
-Проходим по всем делам.
-
-Находим первое с совпадающим названием.
-
-Переключаем статус и выводим сообщение.
-
-Если не найдено → сообщаем об ошибке.
-
-7) Получение номера по названию (getTaskNumberByName)
-
-Узнаем позицию дела по его названию
-
-Проходим по списку.
-
-При совпадении названия → возвращаем индекс + 1.
-
-Если не найдено → возвращаем -1.
-
-8) Удаление дела
-
-Есть два способа:
-
-а) По номеру (removeTaskByNumber):
-
-Проверяем корректность номера.
-
-Удаляем из списка по индексу number - 1.
-
-Выводим сообщение с названием удалённого дела.
-
-б) По названию (removeTaskByName):
-
-Находим дело с совпадающим названием.
-
-Удаляем первое найденное.
-
-Выводим сообщение.
-
-Если не найдено → сообщаем об ошибке.
-
-9) Статистика
-
-Методы:
-
-getTotalTasks() → общее количество дел.
-
-getCompletedCount() → количество с completed == true.
-
-getPendingCount() → разница между общим и выполненным.
-
-getCompletionPercentage() → процент выполнения (0.0–100.0).
-
-printStatistics():
-
-Выводит:
-
-Всего дел
-
-Выполнено
-
-Не выполнено
-
-Процент (с 1 знаком после запятой)
-
-10) Консольный интерфейс (main)
-
-Обеспечиваем интерактивное взаимодействие.
-
-Создаем TodoList с именем "Дела на неделю".
-
-Запускаем бесконечный цикл:
-
-Выводим доступные команды.
-
-Прочитываем строку от пользователя.
-
-Обрабатываем команду:
-
-Команды:
-
-add <текст> - добавить дело
-
-list - вывести все дела
-
-pending - только невыполненные
-
-done - только выполненные
-
-toggle <номер или название> - переключить статус
-
-remove <номер или название> - удалить дело
-
-stats - показать статистику
-
-exit - завершить программу
-
-11) Завершение программы
-
-При вводе exit:
-
-Выходим из цикла.
-
-Закрытие Scanner.
-
-Вывод "До свидания!".
-
+1. Добавление нового дела
+   
+   `ЕСЛИ список полон (count >= MAX_TASKS):
+    Вывести "Список полон!"
+ИНАЧЕ:
+    Прочитать название дела
+    Удалить пробелы в начале и конце (trim)
+    ЕСЛИ название пустое:
+        Вывести ошибку
+    ИНАЧЕ ЕСЛИ дело уже существует:
+        Вывести "Такое дело уже существует!"
+    ИНАЧЕ:
+        Добавить дело в массив tasks[count]
+        Установить completed[count] = false
+        Увеличить count на 1
+        Вывести "Дело добавлено!"`
+
+2. Вывод всех дел
+
+   
+   `ЕСЛИ список пуст (count == 0):
+    Вывести "Список пуст."
+ИНАЧЕ:
+    Для i от 0 до count-1:
+        Определить статус: 
+            если completed[i] == true → "x"
+            иначе → " "
+        Вывести в формате: "(буква) [статус] «название»"
+        (буквы: a, b, c, ...)`
+
+ 3. Вывод невыполненных дел
+
+    `Установить флаг found = false
+Для i от 0 до count-1:
+    ЕСЛИ completed[i] == false:
+        Вывести дело в формате: "(буква) [ ] «название»"
+        Установить found = true
+ЕСЛИ found == false:
+    Вывести "Нет невыполненных дел."`
+
+ 4. Вывод выполненных дел
+
+    `Аналогично пункту 3, но проверяем completed[i] == true
+и выводим в формате: "(буква) [x] «название»"`
+    
+ 5.  Отметка как выполненное (по номеру)
+
+`ЕСЛИ список пуст:
+    Вывести ошибку
+ ИНАЧЕ:
+    Прочитать номер
+    ЕСЛИ номер < 1 ИЛИ номер > count:
+        Вывести "Неверный номер!"
+     ИНАЧЕ:
+        Установить completed[номер - 1] = true
+        Вывести подтверждение`
+        
+    
+ 6.  Отметка как выполненное (по названию)
+
+`ЕСЛИ список пуст:
+    Вывести ошибку
+ ИНАЧЕ:
+    Прочитать название
+    Для i от 0 до count-1:
+        ЕСЛИ tasks[i] равно названию:
+            Установить completed[i] = true
+            Вывести подтверждение
+            Завершить поиск
+    ЕСЛИ не найдено:
+        Вывести "Дело не найдено!"`
+    
+ 7–8. Удаление дела (по номеру / по названию)
+
+ `Аналогично пункту 5/6, но после нахождения:
+    Сдвинуть все элементы справа на одну позицию влево
+    Уменьшить count на 1`
+ 
+ 9. Поиск номера по названию
+
+     `Для i от 0 до count-1:
+    ЕСЛИ tasks[i] равно названию:
+        Вывести "Номер дела: i+1"
+        Завершить поиск
+ЕСЛИ не найдено:
+    Вывести "Дело не найдено!"`
+    
+ 10. Вывод статистики
+
+  `  Вычислить:
+    total = count
+    completedCount = количество true в completed[]
+    pendingCount = total - completedCount
+    percentage = (completedCount * 100.0) / total (если total > 0)
+     Вывести:
+    "Всего дел: total"
+    "Выполнено: completedCount"
+    "Не выполнено: pendingCount"
+    "Процент выполнения: percentage%"`
+    
 ### 3. Программа
 
 ```java
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-public class TodoList {
-    private static class Task {
-        String name;
-        boolean completed;
+public class Main {
+    static final int MAX_TASKS = 100;
 
-        Task(String name) {
-            this.name = name;
-            this.completed = false;
+
+    static String[] tasks = new String[MAX_TASKS];
+    static boolean[] completed = new boolean[MAX_TASKS];
+    static int count = 0;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n=== Список дел ===");
+            System.out.println("1. Добавить дело");
+            System.out.println("2. Показать все дела");
+            System.out.println("3. Показать невыполненные");
+            System.out.println("4. Показать выполненные");
+            System.out.println("5. Отметить как выполненное (по номеру)");
+            System.out.println("6. Отметить как выполненное (по названию)");
+            System.out.println("7. Удалить дело (по номеру)");
+            System.out.println("8. Удалить дело (по названию)");
+            System.out.println("9. Найти номер по названию");
+            System.out.println("10. Статистика");
+            System.out.println("0. Выход");
+            System.out.print("Выберите действие: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    addTask(scanner);
+                    break;
+                case 2:
+                    printAllTasks();
+                    break;
+                case 3:
+                    printPendingTasks();
+                    break;
+                case 4:
+                    printCompletedTasks();
+                    break;
+                case 5:
+                    markCompletedByNumber(scanner);
+                    break;
+                case 6:
+                    markCompletedByName(scanner);
+                    break;
+                case 7:
+                    removeByNumber(scanner);
+                    break;
+                case 8:
+                    removeByName(scanner);
+                    break;
+                case 9:
+                    findNumberByName(scanner);
+                    break;
+                case 10:
+                    printStatistics();
+                    break;
+                case 0:
+                    System.out.println("До свидания!");
+                    return;
+                default:
+                    System.out.println("Неверный выбор!");
+            }
         }
     }
 
-    private List<Task> tasks = new ArrayList<>();
-    private String name = "Мой список дел";
+    // Добавление нового дела
+    static void addTask(Scanner scanner) {
+        if (count >= MAX_TASKS) {
+            System.out.println("Список полон! Нельзя добавить больше " + MAX_TASKS + " дел.");
+            return;
+        }
 
-    // Конструкторы
-    public TodoList() {}
+        System.out.print("Введите название дела: ");
+        String name = scanner.nextLine().trim();
 
-    public TodoList(String name) {
-        this.name = name;
-    }
+        if (name.isEmpty()) {
+            System.out.println("Название не может быть пустым!");
+            return;
+        }
 
-    // Добавление нового дела (проверка на дубликат)
-    public void addTask(String taskName) {
-        for (Task t : tasks) {
-            if (t.name.equals(taskName)) {
-                System.out.println("Дело \"" + taskName + "\" уже существует.");
+        // Проверка существования уже такое дела
+        for (int i = 0; i < count; i++) {
+            if (tasks[i].equals(name)) {
+                System.out.println("Такое дело уже существует!");
                 return;
             }
         }
-        tasks.add(new Task(taskName));
-        System.out.println("Дело \"" + taskName + "\" добавлено.");
+
+        tasks[count] = name;
+        completed[count] = false;
+        count++;
+        System.out.println("Дело добавлено!");
     }
 
-    // Вывод всего списка
-    public void printAllTasks() {
-        System.out.println(name + ":");
-        if (tasks.isEmpty()) {
-            System.out.println("  Список пуст.");
+    // Вывод всех дел
+    static void printAllTasks() {
+        if (count == 0) {
+            System.out.println("Список пуст.");
             return;
         }
+
+        System.out.println("Все дела:");
         char letter = 'a';
-        for (Task t : tasks) {
-            String status;
-            if (t.completed) {
-                status = "x";
-            } else {
-                status = " ";
-            }
-            System.out.println("  (" + letter + ") [" + status + "] \"" + t.name + "\"");
+        for (int i = 0; i < count; i++) {
+            String status = completed[i] ? "x" : " ";
+            System.out.println("(" + letter + ") [" + status + "] «" + tasks[i] + "»");
             letter++;
         }
     }
 
-    // Вывод только невыполненных дел
-    public void printPendingTasks() {
+    // Вывод невыполненных дел
+    static void printPendingTasks() {
+        boolean found = false;
         System.out.println("Невыполненные дела:");
-        boolean found = false;
         char letter = 'a';
-        for (Task t : tasks) {
-            if (!t.completed) {
-                System.out.println("  (" + letter + ") [ ] \"" + t.name + "\"");
+        for (int i = 0; i < count; i++) {
+            if (!completed[i]) {
+                System.out.println("(" + letter + ") [ ] «" + tasks[i] + "»");
+                letter++;
                 found = true;
             }
-            letter++;
         }
         if (!found) {
-            System.out.println("  Нет невыполненных дел.");
+            System.out.println("Нет невыполненных дел.");
         }
     }
 
-    // Вывод только выполненных дел
-    public void printCompletedTasks() {
+    // Вывод выполненных дел
+    static void printCompletedTasks() {
+        boolean found = false;
         System.out.println("Выполненные дела:");
-        boolean found = false;
         char letter = 'a';
-        for (Task t : tasks) {
-            if (t.completed) {
-                System.out.println("  (" + letter + ") [x] \"" + t.name + "\"");
+        for (int i = 0; i < count; i++) {
+            if (completed[i]) {
+                System.out.println("(" + letter + ") [x] «" + tasks[i] + "»");
+                letter++;
                 found = true;
             }
-            letter++;
         }
         if (!found) {
-            System.out.println("  Нет выполненных дел.");
+            System.out.println("Нет выполненных дел.");
         }
     }
 
-    // Изменение статуса по номеру
-    public void toggleTaskByNumber(int number) {
-        if (number < 1 || number > tasks.size()) {
-            System.out.println("Неверный номер: " + number);
+    // Отметка как выполненное по номеру
+    static void markCompletedByNumber(Scanner scanner) {
+        if (count == 0) {
+            System.out.println("Список пуст!");
             return;
         }
-        Task t = tasks.get(number - 1);
-        t.completed = !t.completed;
-        String status;
-        if (t.completed) {
-            status = "выполнено";
-        } else {
-            status = "снято с выполнения";
+
+        System.out.print("Введите номер дела (1-" + count + "): ");
+        int number = scanner.nextInt();
+
+        if (number < 1 || number > count) {
+            System.out.println("Неверный номер!");
+            return;
         }
-        System.out.println("Дело \"" + t.name + "\" " + status + ".");
+
+        completed[number - 1] = true;
+        System.out.println("Дело отмечено как выполненное!");
     }
 
-    // Изменение статуса по названию
-    public void toggleTaskByName(String taskName) {
-        for (Task t : tasks) {
-            if (t.name.equals(taskName)) {
-                t.completed = !t.completed;
-                String status;
-                if (t.completed) {
-                    status = "выполнено";
-                } else {
-                    status = "снято с выполнения";
+    // Отметка как выполненное по названию
+    static void markCompletedByName(Scanner scanner) {
+        if (count == 0) {
+            System.out.println("Список пуст!");
+            return;
+        }
+
+        System.out.print("Введите название дела: ");
+        String name = scanner.nextLine();
+
+        for (int i = 0; i < count; i++) {
+            if (tasks[i].equals(name)) {
+                completed[i] = true;
+                System.out.println("Дело отмечено как выполненное!");
+                return;
+            }
+        }
+        System.out.println("Дело не найдено!");
+    }
+
+    // Удаление дела по номеру
+    static void removeByNumber(Scanner scanner) {
+        if (count == 0) {
+            System.out.println("Список пуст!");
+            return;
+        }
+
+        System.out.print("Введите номер дела (1-" + count + "): ");
+        int number = scanner.nextInt();
+
+        if (number < 1 || number > count) {
+            System.out.println("Неверный номер!");
+            return;
+        }
+
+        for (int i = number - 1; i < count - 1; i++) {
+            tasks[i] = tasks[i + 1];
+            completed[i] = completed[i + 1];
+        }
+        count--;
+        System.out.println("Дело удалено!");
+    }
+
+    // Удаление дела по названию
+    static void removeByName(Scanner scanner) {
+        if (count == 0) {
+            System.out.println("Список пуст!");
+            return;
+        }
+
+        System.out.print("Введите название дела: ");
+        String name = scanner.nextLine();
+
+        for (int i = 0; i < count; i++) {
+            if (tasks[i].equals(name)) {
+                for (int j = i; j < count - 1; j++) {
+                    tasks[j] = tasks[j + 1];
+                    completed[j] = completed[j + 1];
                 }
-                System.out.println("Дело \"" + t.name + "\" " + status + ".");
+                count--;
+                System.out.println("Дело удалено!");
                 return;
             }
         }
-        System.out.println("Дело \"" + taskName + "\" не найдено.");
+        System.out.println("Дело не найдено!");
     }
 
-    // Получение номера по названию
-    public int getTaskNumberByName(String taskName) {
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).name.equals(taskName)) {
-                return i + 1;
-            }
-        }
-        return -1;
-    }
-
-    // Удаление по номеру
-    public void removeTaskByNumber(int number) {
-        if (number < 1 || number > tasks.size()) {
-            System.out.println("Неверный номер: " + number);
+    // Поиск номера по названию
+    static void findNumberByName(Scanner scanner) {
+        if (count == 0) {
+            System.out.println("Список пуст!");
             return;
         }
-        String name = tasks.get(number - 1).name;
-        tasks.remove(number - 1);
-        System.out.println("Дело \"" + name + "\" удалено.");
-    }
 
-    // Удаление по названию
-    public void removeTaskByName(String taskName) {
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).name.equals(taskName)) {
-                tasks.remove(i);
-                System.out.println("Дело \"" + taskName + "\" удалено.");
+        System.out.print("Введите название дела: ");
+        String name = scanner.nextLine();
+
+        for (int i = 0; i < count; i++) {
+            if (tasks[i].equals(name)) {
+                System.out.println("Номер дела: " + (i + 1));
                 return;
             }
         }
-        System.out.println("Дело \"" + taskName + "\" не найдено.");
-    }
-
-    // Получение количества дел
-    public int getTotalTasks() {
-        return tasks.size();
-    }
-
-    public int getCompletedCount() {
-        int count = 0;
-        for (Task t : tasks) {
-            if (t.completed) count++;
-        }
-        return count;
-    }
-
-    public int getPendingCount() {
-        return getTotalTasks() - getCompletedCount();
-    }
-
-    // Процент выполнения
-    public double getCompletionPercentage() {
-        if (getTotalTasks() == 0) return 0.0;
-        return (double) getCompletedCount() / getTotalTasks() * 100;
+        System.out.println("Дело не найдено!");
     }
 
     // Вывод статистики
-    public void printStatistics() {
-        int total = getTotalTasks();
-        int done = getCompletedCount();
-        int pending = getPendingCount();
-        double percent = getCompletionPercentage();
+    static void printStatistics() {
+        int total = count;
+        int completedCount = 0;
 
-        System.out.println("Статистика:");
-        System.out.println("  Всего дел: " + total);
-        System.out.println("  Выполнено: " + done);
-        System.out.println("  Не выполнено: " + pending);
-        System.out.printf("  Процент выполнения: %.1f%%\n", percent);
-    }
-
-    // Простой пример использования через консоль (опционально)
-    public static void main(String[] args) {
-        TodoList list = new TodoList("Дела на неделю");
-        Scanner scanner = new Scanner(System.in);
-        String command;
-
-        while (true) {
-            System.out.println("\nКоманды: add, list, pending, done, toggle, remove, stats, exit");
-            System.out.print("Введите команду: ");
-            command = scanner.nextLine().trim();
-
-            if (command.equals("exit")) {
-                break;
-            } else if (command.equals("list")) {
-                list.printAllTasks();
-            } else if (command.equals("pending")) {
-                list.printPendingTasks();
-            } else if (command.equals("done")) {
-                list.printCompletedTasks();
-            } else if (command.startsWith("add ")) {
-                String task = command.substring(4).trim();
-                if (!task.isEmpty()) list.addTask(task);
-            } else if (command.startsWith("toggle ")) {
-                String arg = command.substring(7).trim();
-                try {
-                    int num = Integer.parseInt(arg);
-                    list.toggleTaskByNumber(num);
-                } catch (NumberFormatException e) {
-                    list.toggleTaskByName(arg);
-                }
-            } else if (command.startsWith("remove ")) {
-                String arg = command.substring(7).trim();
-                try {
-                    int num = Integer.parseInt(arg);
-                    list.removeTaskByNumber(num);
-                } catch (NumberFormatException e) {
-                    list.removeTaskByName(arg);
-                }
-            } else if (command.equals("stats")) {
-                list.printStatistics();
-            } else {
-                System.out.println("Неизвестная команда.");
+        for (int i = 0; i < count; i++) {
+            if (completed[i]) {
+                completedCount++;
             }
         }
-        scanner.close();
-        System.out.println("До свидания!");
+        int pendingCount = total - completedCount;
+        double percentage = (total == 0) ? 0.0 : (double) completedCount / total * 100;
+
+        System.out.println("Статистика:");
+        System.out.println("Всего дел: " + total);
+        System.out.println("Выполнено: " + completedCount);
+        System.out.println("Не выполнено: " + pendingCount);
+        System.out.printf("Процент выполнения: %.1f%%\n", percentage);
     }
 }
 
